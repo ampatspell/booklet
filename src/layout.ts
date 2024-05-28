@@ -23,7 +23,7 @@ export const layout = (pages: number) => {
 
   for(let i = 0; i < rounded / 4; i++) {
     const base = i * 2;
-    const back = rounded - (i * 2);
+    const back = rounded - base;
     obverse[i].left = back - 1;
     obverse[i].right = base;
     averse[i].left = base + 1;
