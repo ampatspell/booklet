@@ -6,7 +6,7 @@ import { createTarget } from './target';
 const scaled = (value: number, scale: number) => value * scale;
 
 run(async () => {
-  const source = await createSource('book.pdf');
+  const source = await createSource('input.pdf');
   const target = await createTarget(toLandscape(PageSizes.A4));
   const embedded = await target.embedSource(source);
 
