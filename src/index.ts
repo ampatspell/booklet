@@ -2,8 +2,11 @@ import { PageSizes } from 'pdf-lib';
 import { run, toLandscape } from './utils';
 import { createSource } from './source';
 import { createTarget } from './target';
+import { layout } from './layout';
 
 const scaled = (value: number, scale: number) => value * scale;
+
+// layout(16);
 
 run(async () => {
   const source = await createSource('input.pdf');
