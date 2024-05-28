@@ -1,0 +1,16 @@
+{
+  "name": "booklet",
+  "scripts": {
+    "build": "tsx ./src/index.ts"
+  },
+  "type": "module",
+  "dependencies": {
+    "pdf-lib": "^1.17.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.12",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5",
+    "tsx": "^4.11.0"
+  }
+}
