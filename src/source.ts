@@ -1,14 +1,20 @@
 import { PDFDocument } from "pdf-lib";
 import { load } from "./utils";
+import { createLayout } from "./layout";
 
 export class Source {
   doc: PDFDocument;
+
   constructor(doc: PDFDocument) {
     this.doc = doc;
   }
 
   get pages() {
     return this.doc.getPages();
+  }
+
+  createLayout() {
+    return createLayout(this.pages.length);
   }
 }
 

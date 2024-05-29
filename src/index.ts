@@ -1,7 +1,6 @@
 import { PageSizes } from 'pdf-lib';
 import { run, toLandscape } from './utils';
 import { createSource } from './source';
-import { createLayout } from './layout';
 import { createTargets } from './targets';
 
 const input = 'input.pdf';
@@ -11,7 +10,7 @@ const output = 'output.pdf';
 
 run(async () => {
   const source = await createSource(input);
-  const layout = createLayout(source.pages.length);
+  const layout = source.createLayout();
   const targets = await createTargets(pageSize);
   const embedded = await targets.embedSource(source);
   await embedded.drawSpreads(layout, scale);
