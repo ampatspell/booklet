@@ -3,13 +3,7 @@ export type Spread = {
   right?: number;
 };
 
-const roundUp = (number: number) => {
-  const res = number % 2;
-  if(res === 0) {
-    return number;
-  }
-  return number - res + 4;
-};
+const roundUp = (number: number) => Math.ceil(number / 4) * 4;
 
 export const createLayout = (pages: number) => {
   const rounded = roundUp(pages);
