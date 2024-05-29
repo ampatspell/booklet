@@ -2,8 +2,6 @@ import { PDFDocument, PDFEmbeddedPage, PDFPage, rgb } from "pdf-lib";
 import { PageSize, save } from "./utils";
 import { Source } from "./source";
 import { EmbeddedPages } from "./embedded";
-import { parse } from "path";
-import { Spread } from "./layout";
 
 type DrawSpreadOptions = {
   page: PDFPage;
