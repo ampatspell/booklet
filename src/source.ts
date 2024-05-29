@@ -6,6 +6,10 @@ export class Source {
   constructor(doc: PDFDocument) {
     this.doc = doc;
   }
+
+  get pages() {
+    return this.doc.getPages();
+  }
 }
 
 export const createSource = async (filename: string) => {

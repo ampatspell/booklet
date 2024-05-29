@@ -2,6 +2,8 @@ import { PDFDocument, PDFEmbeddedPage, PDFPage, rgb } from "pdf-lib";
 import { PageSize, save } from "./utils";
 import { Source } from "./source";
 import { EmbeddedPages } from "./embedded";
+import { parse } from "path";
+import { Spread } from "./layout";
 
 type DrawSpreadOptions = {
   page: PDFPage;
@@ -13,7 +15,7 @@ type DrawSpreadOptions = {
   height: number;
 };
 
-class Target {
+export class Target {
   doc: PDFDocument;
   pageSize: PageSize;
   constructor(doc: PDFDocument, pageSize: PageSize) {
@@ -23,7 +25,7 @@ class Target {
 
   async embedSource(source: Source) {
     const pages = await this.doc.embedPdf(source.doc, source.doc.getPageIndices());;
-    return new EmbeddedPages(pages);
+    return new EmbeddedPages(this, source, pages);
   }
 
   addPage() {

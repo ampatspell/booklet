@@ -7,22 +7,22 @@ export type PageSize = [number, number];
 // dirnameForURL(import.meta.url)
 export const dirnameForURL = (url: string) => dirname(fileURLToPath(url));
 
-export const run = (cb: () => Promise<void>) => {
-  cb().then(() => {
-    console.log('done');
-  }, err => {
-    console.log(err.stack);
-  });
-}
+export const run = (cb: () => Promise<void>) => cb().catch((err) => {
+  console.log(err.stack);
+});
 
 export const assetsRoot = join(dirnameForURL(import.meta.url), '..', 'assets');
 
 export const load = async (filename: string): Promise<Buffer> => {
-  return await readFile(join(assetsRoot, filename));
+  const fullName = join(assetsRoot, filename);
+  console.log('»', fullName);
+  return await readFile(fullName);
 }
 
 export const save = async (filename: string, buffer: Buffer): Promise<void> => {
-  await writeFile(join(assetsRoot, filename), buffer);
+  const fullName = join(assetsRoot, filename);
+  console.log('«', fullName);
+  await writeFile(fullName, buffer);
 }
 
 export const toLandscape = (size: PageSize): PageSize => {

@@ -1,33 +1,48 @@
 import { PDFEmbeddedPage } from "pdf-lib";
+import { Target } from "./target";
+import { Source } from "./source";
+import { Spread } from "./layout";
 
-export class EmbeddedPageSpread {
-  left: PDFEmbeddedPage | undefined;
-  right: PDFEmbeddedPage | undefined;
-
-  constructor(left?: PDFEmbeddedPage, right?: PDFEmbeddedPage) {
-    this.left = left;
-    this.right = right;
-  }
-}
+const scaled = (value: number, scale: number) => value * scale;
 
 export class EmbeddedPages {
+  target: Target;
+  source: Source;
   pages: PDFEmbeddedPage[];
-  spreads: EmbeddedPageSpread[];
 
-  constructor(pages: PDFEmbeddedPage[]) {
+  constructor(target: Target, source: Source, pages: PDFEmbeddedPage[]) {
+    this.target = target;
+    this.source = source;
     this.pages = pages;
-    this.spreads = this.createSpreads();
   }
 
-  private createSpreads() {
-    const pages = this.pages;
-    const count = Math.ceil(pages.length / 2);
-    const spreads: EmbeddedPageSpread[] = [];
-    for(let i = 0; i < count; i++) {
-      const left = pages[i * 2];
-      const right = pages[(i * 2) + 1];
-      spreads.push(new EmbeddedPageSpread(left, right));
+  embeddedPage(index?: number) {
+    if(index !== undefined) {
+      return this.pages[index];
     }
-    return spreads;
+  }
+
+  async drawSpreads(spreads: Spread[], scale: number) {
+    for(let spread of spreads) {
+      const page = this.target.addPage();
+      const left = this.embeddedPage(spread.left);
+      const right = this.embeddedPage(spread.right);
+      if(left || right) {
+        const leftOrRight = (left || right)!;
+        const pageWidth = page.getWidth();
+        const pageHeight = page.getHeight();
+        const width = scaled(leftOrRight.width, scale);
+        const height = scaled(leftOrRight.height, scale);
+        this.target.drawSpread({
+          page,
+          left,
+          right,
+          x: pageWidth / 2 - width,
+          y: pageHeight / 2 - height / 2,
+          width,
+          height,
+        });
+      }
+    }
   }
 }
