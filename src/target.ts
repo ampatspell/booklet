@@ -1,9 +1,11 @@
-import { PDFDocument, PDFEmbeddedPage, PDFPage, rgb } from "pdf-lib";
+import { PDFDocument, PDFEmbeddedPage, PDFFont, PDFPage, rgb, StandardFonts } from "pdf-lib";
 import { PageSize, save } from "./utils";
 import { Source } from "./source";
 import { EmbeddedPages } from "./embedded";
+import { Spread } from "./layout";
 
 type DrawSpreadOptions = {
+  spread: Spread;
   page: PDFPage;
   left?: PDFEmbeddedPage;
   right?: PDFEmbeddedPage;
@@ -30,8 +32,19 @@ export class Target {
     return this.doc.addPage(this.pageSize);
   }
 
-  drawSpread(opts: DrawSpreadOptions) {
-    const { page, left, right, x, y, width, height } = opts;
+  _font?: PDFFont;
+
+  async font() {
+    let font = this._font;
+    if(!font) {
+      font = await this.doc.embedFont(StandardFonts.Helvetica);
+      this._font = font;
+    }
+    return font;
+  }
+
+  async drawSpread(opts: DrawSpreadOptions) {
+    const { page, spread, left, right, x, y, width, height } = opts;
     const leftOrRight = left || right;
     if(!leftOrRight) {
       return;
@@ -39,17 +52,26 @@ export class Target {
 
     {
       const rest = { width, height, y };
-      if(left) {
-        page.drawPage(left, {
+
+      const draw = async (embedded: PDFEmbeddedPage, { x, number }: { x: number, number?: number }) => {
+        page.drawPage(embedded, {
           x,
           ...rest,
         });
+        page.drawText(`${(number ?? 0) + 1}`, {
+          font: await this.font(),
+          x: x + (width / 2),
+          y: (page.getHeight() / 2) - (height / 2) - 30,
+          color: rgb(0, 0, 0),
+          size: 8,
+        });
+      }
+
+      if(left) {
+        await draw(left, { x, number: spread.left });
       }
       if(right) {
-        page.drawPage(right, {
-          x: x + width,
-          ...rest,
-        });
+        await draw(right, { x: x + width, number: spread.right });
       }
     }
 

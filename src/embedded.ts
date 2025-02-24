@@ -33,7 +33,8 @@ export class EmbeddedPages {
         const pageHeight = page.getHeight();
         const width = scaled(leftOrRight.width, scale);
         const height = scaled(leftOrRight.height, scale);
-        this.target.drawSpread({
+        await this.target.drawSpread({
+          spread,
           page,
           left,
           right,
